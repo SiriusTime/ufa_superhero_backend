@@ -1,10 +1,5 @@
-from main import MainMixin
+from main import Main
 #  import asyncio  TODO for tasks
-
-
-class Main(MainMixin):
-    async def task_checkout(self):
-        pass
 
 
 if __name__ == "__main__":

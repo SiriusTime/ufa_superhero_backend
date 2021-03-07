@@ -3,8 +3,12 @@ from aiohttp_session import get_session
 
 
 class BaseLogicMixinChat:
+    async def get_session(self, request):
+        session = await get_session(request)
+        return session
+
     async def connect(self, request):
-        request.session = await get_session(request)
+        request.session = self.get_session(request)
 
         ws = web.WebSocketResponse()
         request.app["channels"][request.session] = ws
@@ -19,6 +23,13 @@ class BaseLogicMixinChat:
             except ConnectionResetError:
                 del request.app['channels'][session]
 
-    async def send(self, request, message, session):
-        peer = request.app["channels"][session]
-        peer.send_json(message.as_dict())
+
+class BaseLogicChat(BaseLogicMixinChat):
+    async def send_all(self, request, message):
+        for peer in request.app["channels"].values():
+            await peer.send_json(message.as_dict())
+
+
+async def echo(request):
+    ws = BaseLogicChat().connect(request)
+    await BaseLogicChat().send_all(request, "{'text': 'hello'}")
