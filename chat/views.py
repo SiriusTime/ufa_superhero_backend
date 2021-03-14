@@ -11,31 +11,32 @@ class BaseLogicMixinChat:
         session = await get_session(request)
         return session
 
+    async def send_to(self, request, message, to):
+        await request.app["channels"][to].send_str(message)
+
     async def connect(self, request):
-        request.session = self.get_session(request)
-
         ws = web.WebSocketResponse()
-        request.app["channels"][request.session] = ws
         await ws.prepare(request)
+        data = await ws.receive()
+        data_set = json.loads(data.data)
 
-
-class BaseLogicChat(BaseLogicMixinChat):
-    async def send_all(self, request, message):
-        for peer in request.app["channels"].values():
-            await peer.send_str(message)
+        request.app["channels"][data_set["user"]] = ws
+        await self.send_to(request, data_set["msg"], data_set["to"])
+        await ws.prepare(request)
 
 
 class DataMixinService:
 
-    async def connect(self):
+    async def connect_db(self):
         client = ma.AsyncIOMotorClient('mongodb://localhost:27017')
         return client['users']
 
-    async def create_collection(self, title="data", client=connect()):
+    async def create_collection(self, title="data", client=None):
+        client = self.connect_db()
         return client[title]
 
     async def do_insert(self, data):
-        db = await self.connect()
+        db = await self.connect_db()
         await db.data.insert_one(data)
 
     async def find(self):
@@ -43,7 +44,7 @@ class DataMixinService:
         return [session for session in data]
 
 
-class DataChat(DataMixinService, BaseLogicChat):
+class DataChat(DataMixinService, BaseLogicMixinChat):
 
     async def validate_task(self, request):
         data = {}
@@ -68,4 +69,4 @@ async def validate(request):
 
 async def echo(request):
     await BaseLogicChat().connect(request)
-    await BaseLogicChat().send_all(request, json.dumps({"text": "hello"}))
+    await DataChat().validate_task(request)

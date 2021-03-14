@@ -13,7 +13,7 @@ class WebsocketService:
 
 WebsocketService().connect(
     {
-        "phone": "+7009",
+        "user": "1",
         "email": "mail@dns1.ru",
         "first_name": "Djo",
         "password": "123456",
