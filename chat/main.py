@@ -4,8 +4,8 @@ import asyncio
 
 from aiohttp import web
 
-from views import echo
-from views import validate
+from views import connect
+from views import send
 #  from views import routes
 
 
@@ -18,8 +18,8 @@ class Main:
         app['channels'] = {}  # TODO change to DB
 
         app.add_routes([
-            web.get('/api/chat/echo/', echo),
-            web.get('/api/chat/admin/update_user_list/', validate)
+            web.get('/api/chat/connect/', connect),
+            web.get('/api/chat/send/', send)
         ])
 
         web.run_app(app)
