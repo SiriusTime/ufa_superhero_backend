@@ -18,12 +18,32 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
 class ProjectViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.ProjectSerializer
-    queryset = models.UserProfile.objects.all()
+    queryset = models.Project.objects.all()
+
+    def make_struct(self, data):
+        return {
+            'id': data.id,
+            'name': data.name,
+            'email': data.email,
+            'inn': data.inn,
+            'link': data.link,
+            'title': data.title,
+            'text': data.text,
+            'category': data.category
+        }
+
+    def list(self, request, *args, **kwargs):
+        try:
+            instance = models.Project.objects.filter(category=request.query_params["category"])
+            data = [self.make_struct(case) for case in instance]
+            return JsonResponse({"data": data})
+        except KeyError:
+            return JsonResponse(super().list(request))
 
 
 class LoginViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.UserProfileSerializer
-    queryset = models.Project.objects.all()
+    queryset = models.UserProfile.objects.all()
 
     def create(self, request, *args, **kwargs):
         try:
