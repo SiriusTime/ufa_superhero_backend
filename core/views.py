@@ -35,10 +35,13 @@ class ProjectViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         try:
             instance = models.Project.objects.filter(category=request.query_params["category"])
-            data = [self.make_struct(case) for case in instance]
+            if instance:
+                data = [self.make_struct(case) for case in instance]
+            else:
+                data = None
             return JsonResponse({"data": data})
         except KeyError:
-            return JsonResponse({"data": super().list(request)})
+            return super().list(request)
 
 
 class LoginViewSet(viewsets.ModelViewSet):
