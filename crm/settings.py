@@ -14,6 +14,8 @@ from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 
+from corsheaders.defaults import default_headers
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -43,6 +45,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'drf_yasg',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -125,14 +128,21 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+CORS_LIST_ADDED = [
+    'access-control-expose-headers',
+]
+
+CORS_ALLOW_HEADERS = list(default_headers) + CORS_LIST_ADDED
+
+
 CORS_ALLOW_METHODS = (
     'GET',
     'OPTIONS',
     'POST',
 )
 
-CORS_ORIGIN_WHITELIST = (
-    'localhost:8000'
-)
+CORS_ORIGIN_WHITELIST = [
+    'http://127.0.0.1:8000',
+]
 
 CORS_ORIGIN_ALLOW_ALL = True

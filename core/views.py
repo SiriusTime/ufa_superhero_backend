@@ -38,7 +38,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
             data = [self.make_struct(case) for case in instance]
             return JsonResponse({"data": data})
         except KeyError:
-            return JsonResponse(super().list(request))
+            return JsonResponse({"data": super().list(request)})
 
 
 class LoginViewSet(viewsets.ModelViewSet):
