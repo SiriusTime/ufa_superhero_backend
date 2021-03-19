@@ -11,9 +11,19 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = models.UserProfile.objects.all()
 
 
+class CategoryViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.CategorySerializer
+    queryset = models.Category.objects.all()
+
+
+class ProjectViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.ProjectSerializer
+    queryset = models.UserProfile.objects.all()
+
+
 class LoginViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.UserProfileSerializer
-    queryset = models.UserProfile.objects.all()
+    queryset = models.Project.objects.all()
 
     def create(self, request, *args, **kwargs):
         try:
