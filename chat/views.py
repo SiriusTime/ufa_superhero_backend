@@ -30,6 +30,7 @@ class BaseLogicMixinChat:
         data_set = json.loads(data.data)
 
         request.app["channels"][data_set["user"]] = ws
+        await self.send_to(request)
 
 
 class DataMixinService:
@@ -76,4 +77,3 @@ async def validate(request):
 
 async def connect(request):
     await DataChat().connect(request)
-    await DataChat().send_to(request)

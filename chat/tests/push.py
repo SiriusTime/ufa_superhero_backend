@@ -5,19 +5,17 @@ from websocket import create_connection
 
 class WebsocketService:
 
-    def connect(self, data, port=8080):
-        ws = create_connection("ws://127.0.0.1:{}/api/chat/echo/".format(port))
+    def connect(self, data, port=2304):
+        ws = create_connection("ws://127.0.0.1:{}/api/chat/connect/".format(port))
         message = json.dumps(data)
+        print(message)
         ws.send(message)
 
 
 WebsocketService().connect(
     {
         "user": "1",
-        "email": "mail@dns1.ru",
-        "first_name": "Djo",
-        "password": "123456",
-        "date_birthday": "1994-02-20",
-        "gender": "male"
+        "to": "1",
+        "msg": "Djo"
     }
 )
