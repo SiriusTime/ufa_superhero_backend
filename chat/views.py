@@ -76,7 +76,4 @@ async def validate(request):
 
 async def connect(request):
     await DataChat().connect(request)
-
-
-async def send(request):
     await DataChat().send_to(request)

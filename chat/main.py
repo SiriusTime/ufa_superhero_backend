@@ -18,8 +18,7 @@ class Main:
         app['channels'] = {}  # TODO change to DB
 
         app.add_routes([
-            web.get('/api/chat/connect/', connect),
-            web.get('/api/chat/send/', send)
+            web.get('/api/chat/connect/', connect)
         ])
 
         web.run_app(app)

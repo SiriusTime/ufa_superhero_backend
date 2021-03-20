@@ -50,7 +50,7 @@ class LoginViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         try:
-            user = models.UserProfile.objects.filter(email=request.data["email"])
+            user = models.UserProfile.objects.filter(email=request.data["email"]).first()
             password = services.crypt(request.data['password'])
         except KeyError:
             return JsonResponse({
