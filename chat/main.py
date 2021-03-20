@@ -5,7 +5,6 @@ import asyncio
 from aiohttp import web
 
 from views import connect
-from views import send
 #  from views import routes
 
 

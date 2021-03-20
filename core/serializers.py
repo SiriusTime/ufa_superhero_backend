@@ -39,7 +39,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.UserProfile
+        model = models.Project
 
         fields = (
             'id', 'name', 'email', 'inn', 'link', 'title', 'text', 'category'
