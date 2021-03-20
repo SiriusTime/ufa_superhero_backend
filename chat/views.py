@@ -11,17 +11,9 @@ class BaseLogicMixinChat:
         session = await get_session(request)
         return session
 
-    async def send_to(self, request):
+    async def send_to(self, request, data):
 
-        ws = web.WebSocketResponse()
-        await ws.prepare(request)
-        data = await ws.receive()
-        data_set = json.loads(data.data)
-
-        try:
-            await request.app["channels"][data_set["to"]].send_str(data_set["msg"])
-        except ConnectionResetError:
-            del request.app['channels'][data_set["to"]]
+        await request.app["channels"][data["to"]].send_str(data["msg"])
 
     async def connect(self, request):
         ws = web.WebSocketResponse()
@@ -30,7 +22,7 @@ class BaseLogicMixinChat:
         data_set = json.loads(data.data)
 
         request.app["channels"][data_set["user"]] = ws
-        await self.send_to(request)
+        await request.app["channels"][data_set["to"]].send_str(data_set["msg"])
 
 
 class DataMixinService:
