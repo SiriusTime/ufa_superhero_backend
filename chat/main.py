@@ -20,5 +20,5 @@ class Main:
             web.get('/api/chat/connect/', connect)
         ])
 
-        web.run_app(app)
+        web.run_app(app, port=2304)
 
