@@ -14,7 +14,8 @@ class Main:
         loop = asyncio.get_event_loop()
 
         app = web.Application(loop=loop)
-        app['channels'] = {}  # TODO change to DB
+        app['channels'] = []  # TODO change to DB
+        app['users'] = {}
 
         app.add_routes([
             web.get('/api/chat/connect/', connect)

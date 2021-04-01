@@ -68,4 +68,15 @@ async def validate(request):
 
 
 async def connect(request):
-    await DataChat().connect(request)
+
+    ws = web.WebSocketResponse()
+    await ws.prepare(request)
+    request.app['channels'].append(ws)
+    async for msg in ws:
+        for pk, client in enumerate(request.app['channels']):
+            try:
+                data = json.loads(msg.data)
+                request.app["users"][data["user"]] = client
+                await request.app["users"][data["to"]].send_str(data["msg"])
+            except ConnectionResetError:
+                del request.app['users']["to"]
