@@ -1,6 +1,6 @@
 from django.db import transaction
 from rest_framework import serializers
-from . import models, services
+from . import models
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -8,7 +8,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = models.UserProfile
 
         fields = (
-            'id', 'email', 'password',
+            'id', 'email', 'password', 'phone'
         )
         extra_kwargs = {
             'password': {'write_only': True}
@@ -17,7 +17,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
     @transaction.atomic()
     def create(self, validated_data):
         instance = super().create(validated_data)
-        services.crypt(validated_data['password'])
+        instance.set_password()
+        instance.generate_token()
+        instance.generate_code()
         instance.save()
         return instance
 

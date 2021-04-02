@@ -64,7 +64,7 @@ class DataChat(DataMixinService, BaseLogicMixinChat):
 
 
 async def validate(request):
-    await DataChat().validate_task(request)
+    await DataChat().validate_task(request)  # TODO create task on asyncio
 
 
 async def connect(request):
@@ -80,3 +80,5 @@ async def connect(request):
                 await request.app["users"][data["to"]].send_str(data["msg"])
             except ConnectionResetError:
                 del request.app['users']["to"]
+            except KeyError:
+                print("error struct msg")
