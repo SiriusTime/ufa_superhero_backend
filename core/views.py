@@ -3,7 +3,6 @@ from rest_framework import viewsets
 
 from . import serializers
 from . import models
-from . import services
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
@@ -51,17 +50,31 @@ class LoginViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         try:
             user = models.UserProfile.objects.filter(email=request.data["email"]).first()
-            password = services.crypt(request.data['password'])
+            if user:
+                password = user.password
+                user.password = request.data['password']
+                user.set_password()
+            else:
+                return JsonResponse({
+                    "error": "user not found"
+                })
         except KeyError:
             return JsonResponse({
                 "error": "data not found"
             })
 
-        if user and user.password == password:
-            return JsonResponse({
+        if user.password == password:
+            response = JsonResponse({
                 "id": user.pk,
+                "email": user.email,
+                "phone": user.phone
             })
+            user.generate_token()
+            user.save()
+            response["authorization"] = user.authorization
+
+            return response
         else:
             return JsonResponse({
-                "error": "not user or password failed"
+                "error": "password failed"
             })
