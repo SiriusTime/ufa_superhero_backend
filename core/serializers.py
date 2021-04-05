@@ -8,7 +8,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = models.UserProfile
 
         fields = (
-            'id', 'email', 'password', 'phone'
+            'id', 'email', 'password', 'phone', 'first_name', 'last_name'
         )
         extra_kwargs = {
             'password': {'write_only': True}
@@ -29,7 +29,7 @@ class CategorySerializer(serializers.ModelSerializer):
         model = models.Category
 
         fields = (
-            'id', 'category',
+            'id', 'category', 'image'
         )
 
     @transaction.atomic()
@@ -44,7 +44,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         model = models.Project
 
         fields = (
-            'id', 'name', 'email', 'inn', 'link', 'title', 'text', 'category'
+            'id', 'user', 'inn', 'link', 'title', 'text', 'category'
         )
 
     @transaction.atomic()

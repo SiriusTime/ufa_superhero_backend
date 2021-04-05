@@ -9,13 +9,36 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.UserProfileSerializer
     queryset = models.UserProfile.objects.all()
 
+    def list(self, request, *args, **kwargs):
+        try:
+            auth = request._request.META['HTTP_AUTHORIZATION']
+            user = models.UserProfile.objects.get(authorization=auth)
+        except KeyError:
+            user = None
+
+        if user:
+            response = JsonResponse({
+                "id": user.pk,
+                "email": user.email,
+                "phone": user.phone,
+                "first_name": user.first_name,
+                "last_name": user.last_name
+            })
+            user.generate_token()
+            user.save()
+            response["authorization"] = user.authorization
+        else:
+            response = JsonResponse({"error": "user not found"})
+
+        return response
+
 
 class CategoryViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.CategorySerializer
     queryset = models.Category.objects.all()
 
 
-class ProjectViewSet(viewsets.ModelViewSet):
+class ProjectViewSet(viewsets.ModelViewSet):  # TODO add response for create
     serializer_class = serializers.ProjectSerializer
     queryset = models.Project.objects.all()
 
@@ -67,7 +90,9 @@ class LoginViewSet(viewsets.ModelViewSet):
             response = JsonResponse({
                 "id": user.pk,
                 "email": user.email,
-                "phone": user.phone
+                "phone": user.phone,
+                "first_name": user.first_name,
+                "last_name": user.last_name
             })
             user.generate_token()
             user.save()

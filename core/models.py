@@ -11,13 +11,15 @@ class UserProfile(models.Model):
     email = models.EmailField(max_length=32, unique=True)
     phone = models.CharField(max_length=32, unique=True)
     password = models.CharField(max_length=132)
-    authorization = models.TextField(null=True)
+    authorization = models.CharField(max_length=64, unique=True)
     code_auth = models.CharField(max_length=6, null=True)
     is_sms = models.BooleanField(default=False)
     is_email = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
     check = models.DateTimeField(default=datetime.datetime.today())
     date_joined = models.DateTimeField(default=datetime.datetime.today())
+    first_name = models.CharField(max_length=64)
+    last_name = models.CharField(max_length=64)
 
     def __str__(self):
         return str(self.pk)
@@ -38,6 +40,7 @@ class UserProfile(models.Model):
 
 class Category(models.Model):
     category = models.CharField(max_length=256)
+    image = models.TextField()
 
     def __str__(self):
         return str(self.category)
@@ -47,8 +50,8 @@ class Category(models.Model):
 
 
 class Project(models.Model):
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     name = models.CharField(max_length=128)
-    email = models.EmailField(max_length=64)
     inn = models.CharField(max_length=32)
     link = models.TextField()
     title = models.CharField(max_length=64)
