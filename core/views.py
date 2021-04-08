@@ -45,8 +45,7 @@ class ProjectViewSet(viewsets.ModelViewSet):  # TODO add response for create
     def make_struct(self, data):
         return {
             'id': data.id,
-            'name': data.name,
-            'email': data.email,
+            # 'user': data.user,
             'inn': data.inn,
             'link': data.link,
             'title': data.title,

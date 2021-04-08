@@ -135,6 +135,7 @@ STATIC_URL = '/static/'
 
 CORS_LIST_ADDED = [
     'access-control-expose-headers',
+    'authorization'
 ]
 
 CORS_ALLOW_HEADERS = list(default_headers) + CORS_LIST_ADDED
