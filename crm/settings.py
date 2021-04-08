@@ -139,7 +139,7 @@ CORS_LIST_ADDED = [
 ]
 
 CORS_ALLOW_HEADERS = list(default_headers) + CORS_LIST_ADDED
-
+CORS_EXPOSE_HEADERS = ['Authorization']
 
 CORS_ALLOW_METHODS = (
     'GET',
