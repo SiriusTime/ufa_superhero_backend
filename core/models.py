@@ -49,10 +49,18 @@ class Category(models.Model):
         db_table = "category"
 
 
+class Tag(models.Model):
+    title = models.CharField(max_length=32, unique=True)
+
+    def __str__(self):
+        return str(self.title)
+
+    class Meta:
+        db_table = "tag"
+
+
 class Project(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
-    name = models.CharField(max_length=128)
-    inn = models.CharField(max_length=32)
     link = models.TextField()
     title = models.CharField(max_length=64)
     text = models.TextField()

@@ -25,6 +25,7 @@ router = DefaultRouter()
 router.register('profile', views.UserProfileViewSet)
 router.register('login', views.LoginViewSet)
 router.register('category', views.CategoryViewSet)
+router.register('tag', views.TagViewSet)
 router.register('project', views.ProjectViewSet)
 
 

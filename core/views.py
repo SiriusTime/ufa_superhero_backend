@@ -38,6 +38,11 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = models.Category.objects.all()
 
 
+class TagViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.TagSerializer
+    queryset = models.Tag.objects.all()
+
+
 class ProjectViewSet(viewsets.ModelViewSet):  # TODO add response for create
     serializer_class = serializers.ProjectSerializer
     queryset = models.Project.objects.all()

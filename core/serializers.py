@@ -39,12 +39,26 @@ class CategorySerializer(serializers.ModelSerializer):
         return instance
 
 
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Tag
+
+        fields = "__all__"
+
+    @transaction.atomic()
+    def create(self, validated_data):
+        validated_data["title"] = validated_data["title"].lower()
+        instance = models.Tag(**validated_data)
+        instance.save()
+        return instance
+
+
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Project
 
         fields = (
-            'id', 'user', 'inn', 'link', 'title', 'text', 'category'
+            'id', 'user', 'link', 'title', 'text', 'category'
         )
 
     @transaction.atomic()
