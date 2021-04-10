@@ -1,3 +1,4 @@
+from django.db import IntegrityError
 from django.http import JsonResponse
 from rest_framework import viewsets
 
@@ -41,6 +42,12 @@ class CategoryViewSet(viewsets.ModelViewSet):
 class TagViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.TagSerializer
     queryset = models.Tag.objects.all()
+
+    def create(self, request, *args, **kwargs):
+        try:
+            return JsonResponse({"data": super().create(request)})
+        except IntegrityError:
+            return JsonResponse({"error": "a duplicate key value violates a unique constraint"})
 
 
 class ProjectViewSet(viewsets.ModelViewSet):  # TODO add response for create
