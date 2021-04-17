@@ -43,7 +43,7 @@ class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Tag
 
-        fields = "__all__"
+        fields = ("id", "title")
 
     @transaction.atomic()
     def create(self, validated_data):
