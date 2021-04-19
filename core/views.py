@@ -69,7 +69,7 @@ class ProjectViewSet(viewsets.ModelViewSet):  # TODO add response for create
 
     def list(self, request, *args, **kwargs):
         try:
-            instance = models.Project.objects.filter(category=request.query_params["category"])
+            instance = models.Project.objects.filter(name__icontains=request.query_params["category"])
             if instance:
                 data = [self.make_struct(case) for case in instance]
             else:
