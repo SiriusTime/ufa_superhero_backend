@@ -1,5 +1,6 @@
 from django.db import IntegrityError
 from django.http import JsonResponse
+from django.views.generic.base import View
 from rest_framework import viewsets
 
 from . import serializers
@@ -13,7 +14,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         try:
             auth = request._request.META['HTTP_AUTHORIZATION']
-            user = models.UserProfile.objects.get(authorization=auth)
+            user = models.UserProfile.objects.filter(authorization=auth).first()
         except KeyError:
             user = None
 
@@ -114,3 +115,25 @@ class LoginViewSet(viewsets.ModelViewSet):
             return JsonResponse({
                 "error": "password failed"
             })
+
+
+class Logout(View):
+
+    def post(self, request, *args, **kwargs):
+        try:
+            auth = request.META['HTTP_AUTHORIZATION']
+            user = models.UserProfile.objects.filter(authorization=auth).first()
+        except KeyError:
+            user = None
+
+        if user:
+            user.generate_token()
+            user.save()
+
+            return JsonResponse({
+                "success": True
+            })
+
+        return JsonResponse({
+            "success": False
+        })
