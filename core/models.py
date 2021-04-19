@@ -65,6 +65,7 @@ class Project(models.Model):
     title = models.CharField(max_length=64)
     text = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    type_project = models.CharField(max_length=64)
 
     def __str__(self):
         return str(self.pk)

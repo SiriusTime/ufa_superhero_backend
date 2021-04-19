@@ -63,7 +63,8 @@ class ProjectViewSet(viewsets.ModelViewSet):  # TODO add response for create
             'link': data.link,
             'title': data.title,
             'text': data.text,
-            'category': data.category
+            'category': data.category,
+            'type_project': data.type_project
         }
 
     def list(self, request, *args, **kwargs):

@@ -58,7 +58,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         model = models.Project
 
         fields = (
-            'id', 'user', 'link', 'title', 'text', 'category'
+            'id', 'user', 'link', 'title', 'text', 'category', 'type_project'
         )
 
     @transaction.atomic()
