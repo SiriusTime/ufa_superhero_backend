@@ -79,6 +79,7 @@ async def connect(request):
                 request.app["users"][data["user"]] = client
                 await request.app["users"][data["to"]].send_str(data["msg"])
             except ConnectionResetError:
-                del request.app['users']["to"]
-            except KeyError:
-                print("error struct msg")
+                try:
+                    del request.app['users']["to"]
+                except KeyError:
+                    print("error struct msg")
