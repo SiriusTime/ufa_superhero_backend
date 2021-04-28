@@ -138,3 +138,53 @@ class Logout(View):
         return JsonResponse({
             "success": False
         })
+
+
+class ProjectFavoriteViewSet(View):
+    def post(self, request, *args, **kwargs):
+        try:
+            user = request.data["user"]
+            proj = request.data["project"]
+        except KeyError:
+            return JsonResponse({
+            "error": "KeyError"
+        })
+
+        if not models.Project.objects.filter(pk=proj):
+            return JsonResponse({
+            "error": "Project not found"
+        })
+
+        _favorite = models.FavoriteProj.objects.filter(user=user).first()
+        _count = models.CountFavoriteProj.objects.filter(project=proj).first()
+
+        if _favorite:
+            _favorite.projects = _favorite.projects.append(proj)
+            _favorite.save()
+
+        else:
+            data = {
+                "user": user,
+                "projects": [proj, ]
+            }
+            _favorite = models.FavoriteProj(data)
+            _favorite.save()
+
+        if _count:
+            _count.count += 1
+            _count.save()
+
+        else:
+            data = {
+                "project": proj,
+                "count": 1
+            }
+            _count = models.CountFavoriteProj(data)
+            _count.save()
+
+        return JsonResponse({
+            "user": user,
+            "project": proj,
+            "count_for_user": len(_favorite.projects),
+            "count_for_project": _count.count
+        })

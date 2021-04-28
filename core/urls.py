@@ -34,5 +34,6 @@ urlpatterns = [
     url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     url(r'^logout/$', views.Logout.as_view(), name='logout'),
+    url(r'^favorite_project/$', views.ProjectFavoriteViewSet.as_view(), name='favorite_project'),
     url(r'', include(router.urls)),
 ]

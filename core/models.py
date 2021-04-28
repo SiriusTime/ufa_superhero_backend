@@ -5,6 +5,7 @@ import string
 import uuid
 
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 
 
 class UserProfile(models.Model):
@@ -72,3 +73,41 @@ class Project(models.Model):
 
     class Meta:
         db_table = "project"
+
+
+class UrData(models.Model):  # TODO add viewset
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    title = models.CharField(max_length=128)
+    address = models.CharField(max_length=128)
+    inn = models.CharField(max_length=128)
+    oklo = models.CharField(max_length=128)
+    ogrn = models.CharField(max_length=128)
+
+    def __str__(self):
+        return str(self.pk)
+
+    class Meta:
+        db_table = "ur_data"
+
+
+class FavoriteProj(models.Model):
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    projects = ArrayField(models.IntegerField())
+
+    def __str__(self):
+        return str(self.pk)
+
+    class Meta:
+        db_table = "favorite_proj"
+
+
+class CountFavoriteProj(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    count = models.IntegerField()
+
+    def __str__(self):
+        return str(self.pk)
+
+    class Meta:
+        db_table = "count_favorite_proj"
+
