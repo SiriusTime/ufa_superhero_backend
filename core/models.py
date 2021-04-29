@@ -103,7 +103,7 @@ class FavoriteProj(models.Model):
 
 class CountFavoriteProj(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    count = models.IntegerField()
+    _count = models.IntegerField()
 
     def __str__(self):
         return str(self.pk)

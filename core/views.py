@@ -1,3 +1,5 @@
+import json
+
 from django.db import IntegrityError
 from django.http import JsonResponse
 from django.views.generic.base import View
@@ -142,9 +144,10 @@ class Logout(View):
 
 class ProjectFavoriteViewSet(View):
     def post(self, request, *args, **kwargs):
+        data = json.loads(request.body.decode('utf8').replace("'", '"'))
         try:
-            user = request.data["user"]
-            proj = request.data["project"]
+            user = data["user"]
+            proj = data["project"]
         except KeyError:
             return JsonResponse({
             "error": "KeyError"
@@ -171,7 +174,7 @@ class ProjectFavoriteViewSet(View):
             _favorite.save()
 
         if _count:
-            _count.count += 1
+            _count._count += 1
             _count.save()
 
         else:
@@ -186,5 +189,5 @@ class ProjectFavoriteViewSet(View):
             "user": user,
             "project": proj,
             "count_for_user": len(_favorite.projects),
-            "count_for_project": _count.count
+            "count_for_project": _count._count
         })
