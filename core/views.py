@@ -174,13 +174,15 @@ class ProjectFavoriteViewSet(View):
         _count = models.CountFavoriteProj.objects.filter(project=proj).first()
 
         if _favorite:
-            _favorite.projects = _favorite.projects.append(proj)
+            if str(proj) in _favorite.projects:  # TODO to be fix
+                return JsonResponse({"error": "the project already exists"})
+            _favorite.projects += str(proj)
             _favorite.save()
 
         else:
             data = {
-                "user": user,
-                "projects": [proj, ]
+                "user": models.UserProfile.objects.filter(pk=user).first(),
+                "projects": [str(proj), ]
             }
             _favorite = models.FavoriteProj(**data)
             _favorite.save()
@@ -191,8 +193,8 @@ class ProjectFavoriteViewSet(View):
 
         else:
             data = {
-                "project": proj,
-                "count": 1
+                "project": models.Project.objects.filter(pk=proj).first(),
+                "_count": 1
             }
             _count = models.CountFavoriteProj(**data)
             _count.save()
