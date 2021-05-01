@@ -61,11 +61,10 @@ class ProjectViewSet(viewsets.ModelViewSet):  # TODO add response for create
         return {
             'id': data.id,
             # 'user': data.user,
-            'inn': data.inn,
             'link': data.link,
             'title': data.title,
             'text': data.text,
-            'category': data.category,
+            'category': data.category.category,
             'type_project': data.type_project
         }
 
@@ -151,9 +150,35 @@ class ProjectFavoriteViewSet(View):
             "count_for_project": data["count"]
         })
 
-    def get(self):
-        _favorite = models.FavoriteProj.objects.all()
-        _count = models.CountFavoriteProj.objects.all()
+    def get_project_from_pk(self, project):
+        instance = models.Project.objects.filter(pk=int(project)).first()
+        if instance:
+            return {
+                instance.id: {
+                    'link': instance.link,
+                    'title': instance.title,
+                    'text': instance.text,
+                    'category': instance.category.category,
+                    'type_project': instance.type_project
+                }
+            }
+
+    def get_for_user(self, user):
+        user = models.UserProfile.objects.filter(pk=int(user)).first()
+        if user:
+            data = models.FavoriteProj.objects.filter(user=user).first()
+            if data:
+                projects = [
+                    self.get_project_from_pk(project) for project in data.projects
+                ]
+
+                return projects
+        return None
+
+    def get(self, request):
+        data = self.get_for_user(request.GET['user'])
+        if data:
+            return JsonResponse({"data": data})
 
     def post(self, request, *args, **kwargs):
         data = json.loads(request.body.decode('utf8').replace("'", '"'))
