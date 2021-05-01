@@ -63,7 +63,7 @@ class Tag(models.Model):
 class Project(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     link = models.TextField()
-    title = models.CharField(max_length=64)
+    title = models.CharField(max_length=64, unique=True)
     text = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     type_project = models.CharField(max_length=64)
