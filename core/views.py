@@ -154,13 +154,12 @@ class ProjectFavoriteViewSet(View):
         instance = models.Project.objects.filter(pk=int(project)).first()
         if instance:
             return {
-                instance.id: {
-                    'link': instance.link,
-                    'title': instance.title,
-                    'text': instance.text,
-                    'category': instance.category.category,
-                    'type_project': instance.type_project
-                }
+                'id': instance.id,
+                'link': instance.link,
+                'title': instance.title,
+                'text': instance.text,
+                'category': instance.category.category,
+                'type_project': instance.type_project
             }
 
     def get_for_user(self, user):
@@ -176,9 +175,12 @@ class ProjectFavoriteViewSet(View):
         return None
 
     def get(self, request):
-        data = self.get_for_user(request.GET['user'])
-        if data:
-            return JsonResponse({"data": data})
+        try:
+            data = self.get_for_user(request.GET['user'])
+            if data:
+                return JsonResponse({"data": data})
+        except KeyError:
+            return JsonResponse({"error": "KeyError or data not found"})
 
     def post(self, request, *args, **kwargs):
         data = json.loads(request.body.decode('utf8').replace("'", '"'))
