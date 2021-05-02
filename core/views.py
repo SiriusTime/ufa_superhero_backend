@@ -234,19 +234,22 @@ class ProjectFavoriteViewSet(View):
         })
 
     def delete(self, request):
+        _data = json.loads(request.body.decode('utf8').replace("'", '"'))
         try:
-            user = models.UserProfile.objects.filter(pk=int(request.GET["user"])).first()
+            user = models.UserProfile.objects.filter(pk=int(_data["user"])).first()
             if user:
                 data = models.FavoriteProj.objects.filter(user=user).first()
                 projects = data.projects
-                proj = projects.remove(request.GET["project"])
+                projects.remove(_data["project"])
+                data.projects = projects
 
-                _count = models.CountFavoriteProj.objects.filter(project=proj).first()
+                _count = models.CountFavoriteProj.objects.filter(project=_data["project"]).first()
                 if _count:
                     _count._count -= 1
                     _count.save()
+                    data.save()
 
-                return JsonResponse({'success': True})
+                    return JsonResponse({'success': True})
             return JsonResponse({'success': False})
         except KeyError:
             return JsonResponse({'error': 'KeyError'})
