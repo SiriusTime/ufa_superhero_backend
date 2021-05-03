@@ -66,3 +66,14 @@ class ProjectSerializer(serializers.ModelSerializer):
         instance = super().create(validated_data)
         instance.save()
         return instance
+
+
+class UrDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.UrData
+        fields = '__all__'
+
+    @transaction.atomic()
+    def create(self, validated_data):
+        instance = super().create(validated_data)
+        instance.save()

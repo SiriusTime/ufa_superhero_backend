@@ -253,3 +253,8 @@ class ProjectFavoriteViewSet(View):
             return JsonResponse({'success': False})
         except KeyError:
             return JsonResponse({'error': 'KeyError'})
+
+
+class UrDataViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.UrDataSerializer
+    queryset = models.UrData.objects.all()

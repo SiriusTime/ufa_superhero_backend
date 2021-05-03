@@ -75,7 +75,7 @@ class Project(models.Model):
         db_table = "project"
 
 
-class UrData(models.Model):  # TODO add viewset
+class UrData(models.Model):
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     title = models.CharField(max_length=128)
     address = models.CharField(max_length=128)
