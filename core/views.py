@@ -184,10 +184,10 @@ class ProjectFavoriteViewSet(View):
 
     def post(self, request, *args, **kwargs):
         data = json.loads(request.body.decode('utf8').replace("'", '"'))
-        try:
-            user = data["user"]
-            proj = data["project"]
-        except KeyError:
+
+        user = data.get("user", None)
+        proj = data.get("project", None)
+        if not user or not proj:
             return JsonResponse({
             "error": "KeyError"
         })
@@ -201,9 +201,9 @@ class ProjectFavoriteViewSet(View):
         _count = models.CountFavoriteProj.objects.filter(project=proj).first()
 
         if _favorite:
-            if str(proj) in _favorite.projects:  # TODO to be fix
+            if int(proj) in _favorite.projects:
                 return JsonResponse({"error": "the project already exists"})
-            _favorite.projects += str(proj)
+            _favorite.projects += proj
             _favorite.save()
 
         else:
